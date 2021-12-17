@@ -1,0 +1,57 @@
+<section>
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-8 col-lg-8 col-12 d-sb-none">
+                <div class="wrapper " id="wrapper1">
+                    <div class="wrapper-info align-items-center justify-content-center flex-column">
+                        <div class="wrapper-header d-block">
+                            <h1 class="text-success">Login Successful</h1>
+                        </div>
+
+                        <div class="wrapper-footer">
+                            {{!-- <button class="btn btn-warning">Logout</button> --}}
+                            <i class="fa fa-check-circle text-success" style="font-size: 50px"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-12">
+                <div class="wrapper">
+                    <div class="qr-wrapper text-center">
+                        <div class="qr-wrapper-header">
+                            <h3 class="qr-title">Scan QR - Code</h3>
+                        </div>
+
+                        <div class="qr-wrapper-body">
+                            <div class="qr-code-scanner d-flex justify-content-center align-items-center">
+                                <img id="qrcode-image" height="200" width="200" alt=""></img>
+                                <div class="spinner-wrapper justify-content-center mt-3">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="qr-footer">
+
+                        </div>
+                        <div class="d-sa-none wrapper2-bottom">
+                            <h2 class="text-success">Login Successful</h2>
+
+                            <i class="fa fa-check-circle text-success" style="font-size: 50px"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(function () {
+        $('#dtBasicExample').DataTable({
+            "ordering": [[3, "desc"]]
+        });
+        $('.dataTables_length').addClass('bs-select');
+    })
+</script>

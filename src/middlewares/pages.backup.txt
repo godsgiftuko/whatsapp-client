@@ -1,0 +1,86 @@
+const WHATSAPP_INIT = require('../whatsApp-api/app');
+const utils = require('../utils/utils');
+const { dirname, join } = require('path');
+const fs = require('fs');
+
+const appDir = dirname(require.main.filename);
+
+const landing = async function (req, res) {
+    const qrPath = appDir + '/public/images';
+    const qrCode = qrPath + '/generatedQR.png';
+    const exists = await utils.fileExists('./session.json');
+    const findQrcode = await utils.fileExists(qrCode);
+
+    console.log(exists, 'pages');
+    if (!exists && findQrcode) {
+        WHATSAPP_INIT();
+        res.render('home', {
+            title: 'Home',
+        });
+    } else {
+        res.redirect('/messages');
+    }
+};
+
+const messages = function (req, res) {
+    res.render('messages', {
+        title: 'messages',
+    });
+};
+
+const qrCode = async function (req, res) {
+    const QRCode = require('qrcode');
+    const utils = require('../utils/utils');
+    const fs = require('fs');
+
+    const { dirname } = require('path');
+    const appDir = dirname(require.main.filename);
+
+    // console.log(appDir);
+
+    try {
+        // const qrCodeText = 'http://google.com/';
+
+        // if (req.xhr) {
+        //     const url = await QRCode.toDataURL(qrCodeText);
+        //     res.json({ url });
+        // } else {
+        //     const src = './public/images/qrcode.png';
+        //     const exists = await utils.fileExists(src);
+        //     if (!exists) {
+        //         const stream = fs.createWriteStream(src);
+        //         const code = await QRCode.toFileStream(stream, qrCodeText);
+        //     }
+        //     res.sendFile(src);
+        // }
+
+        if (req.xhr) {
+            const src = './public/images/generatedQR.png';
+            const exists = await utils.fileExists(src);
+
+            if (!exists) {
+                WHATSAPP_INIT();
+            } else {
+                res.json({ url: src.split('./public')[1] });
+            }
+        }
+
+        // else {
+        //     const src = './public/images/qrcode.png';
+        //     const exists = await utils.fileExists(src);
+        //     if (!exists) {
+        //         const stream = fs.createWriteStream(src);
+        //         const code = await QRCode.toFileStream(stream, qrCodeText);
+        //     }
+        //     res.sendFile(src);
+        // }
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+module.exports = {
+    landing,
+    qrCode,
+    messages,
+};
