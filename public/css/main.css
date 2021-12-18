@@ -8,7 +8,7 @@ section {
 .wrapper {
     border-radius: 20px;
     margin: auto;
-    box-shadow: 0px 2px 7px 0px #e7e7e7;
+    box-shadow: 0px 11px 10px 1px #dddddd;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,9 +39,21 @@ section {
     display: flex;
 }
 
+.col-primary {
+    color: #00bfa5 !important;
+}
+.col-black {
+    color: #495057 !important;
+}
+
 @media screen and (max-width: 425px) {
     .d-sb-none {
         display: none !important;
+    }
+
+    .wrapper-info,
+    .qr-code-scanner {
+        height: 500px;
     }
 }
 @media screen and (min-width: 425px) {

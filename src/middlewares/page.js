@@ -12,7 +12,9 @@ const isAuth = exists();
 const landing = async (req, res) => {
     WHATSAPP_INIT();
 
-    !(await isAuth)
+    // console.log(await isAuth);
+
+    !(await exists())
         ? res.render('home', {
               title: 'Home',
           })
@@ -20,8 +22,8 @@ const landing = async (req, res) => {
 };
 
 const messages = async (req, res) => {
-    console.log(await isAuth, 'pages');
-    (await isAuth)
+    // console.log(await isAuth, 'pages');
+    (await exists())
         ? res.render('messages', {
               title: 'messages',
           })
