@@ -4,7 +4,6 @@ const fs = require('fs');
 const appDir = dirname(require.main.filename);
 const utils = require('./src/utils/utils');
 const { io, app } = require('./app');
-const whatsAPP = require('./src/whatsApp-api/app');
 
 // Create a directory tree watcher.
 const qrPath = appDir + '/public/images';

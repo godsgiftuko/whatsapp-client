@@ -1,8 +1,9 @@
 const WHATSAPP_INIT = require('../whatsApp-api/app');
 const utils = require('../utils/utils');
-
+const Chats = require('../database/chats.schema');
 const exists = () => utils.fileExists('./session.json');
 const isAuth = exists();
+
 // if (!exists) {
 //     console.log(false);
 // } else {
@@ -28,6 +29,20 @@ const messages = async (req, res) => {
               title: 'messages',
           })
         : res.redirect('/');
+};
+
+const getMessages = async (req, res) => {
+    await Chats.find({}, (err, data = data[0]) => {
+        if (err) throw err;
+
+        // console.log(data);
+
+        res.json(data);
+    })
+        .clone()
+        .catch(function (err) {
+            console.log(err);
+        });
 };
 
 const qrCode = async function (req, res) {
@@ -60,4 +75,5 @@ module.exports = {
     landing,
     qrCode,
     messages,
+    getMessages,
 };

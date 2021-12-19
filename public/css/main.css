@@ -46,6 +46,10 @@ section {
     color: #495057 !important;
 }
 
+.message-wrapper {
+    padding: 20px 40px;
+}
+
 @media screen and (max-width: 425px) {
     .d-sb-none {
         display: none !important;
@@ -54,6 +58,10 @@ section {
     .wrapper-info,
     .qr-code-scanner {
         height: 500px;
+    }
+
+    .message-wrapper {
+        padding: 20px 20px;
     }
 }
 @media screen and (min-width: 425px) {
