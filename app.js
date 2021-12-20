@@ -15,7 +15,6 @@ const io = new Server(server);
 
 // APP CONFIG
 config();
-// const isDatabase = connectDb();
 app.set('PORT', process.env.PORT || 3000);
 app.engine(
     'hbs',
@@ -36,7 +35,7 @@ app.use('/', routers);
 
 //socket
 io.on('connection', (socket) => {
-    console.log('ws:// Connected to port' + app.get('PORT'));
+    console.log('ws: Connected');
 });
 
 (async () => {

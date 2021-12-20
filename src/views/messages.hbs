@@ -6,6 +6,7 @@
                     <th>Identifier</th>
                     <th>User</th>
                     <th>Message</th>
+                    <th>Time</th>
                 </tr>
             </thead>
         </table>
@@ -15,7 +16,6 @@
 <script>
     $(document).ready(function () {
         const socketIo = io();
-
 
         $.ajax({
             url: '/chats',
@@ -31,21 +31,9 @@
                         { 'data': 'contactId' },
                         { 'data': 'contactName' },
                         { 'data': 'messages' },
+                        { 'data': 'timestamp' },
                     ]
                 })
-                // data.map((each) => {
-                //     const { contactId, contactName, messages } = each
-                //     const message = messages.map((msg) => msg.message);
-                //     $('#table_id tbody').append(
-                //         `
-                //       <tr>
-                //      <td>${contactName}</td>
-                //      <td>${message}</td>
-                //  </tr>
-                //      `
-                //     )
-
-                // })
 
             }
 
@@ -53,7 +41,7 @@
 
         })
 
-        ocketIo.on("message", (socket) => {
+        socketIo.on("message", (socket) => {
             console.log(socket)
         });
 
