@@ -5,7 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 const routers = require('./src/routers/pages')(express);
-const { connectDB } = require('./src/database/mongoDB');
+const { connectMysql } = require('./src/database/mysql/mysql');
 const whatsAPP = require('./src/whatsApp-api/app')();
 
 const http = require('http');
@@ -39,7 +39,9 @@ io.on('connection', (socket) => {
 });
 
 (async () => {
-    const dataBase = await connectDB();
+    const dataBase = await connectMysql();
+
+    // console.log(dataBase);
 
     if (dataBase) {
         return io.emit('status', {

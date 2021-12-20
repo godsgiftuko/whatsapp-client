@@ -1,0 +1,6 @@
+PORT=3000
+DATABASE_HOST=storeFrontByAuterah
+DATABASE_USER=storeFrontByAuterah
+DATABASE_NAME=whatsApp_test
+DATABASE_PW=yrxsUTwXnkEtcBDW
+DATABASE_CLUSTER=cluster0.ew8ur

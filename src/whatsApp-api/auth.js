@@ -21,10 +21,20 @@ module.exports = function ({ whatsappWeb, qrcode, showCliProgress = true }) {
         if (fs.existsSync(SESSION_FILE_PATH)) {
             sessionData = require(SESSION_FILE_PATH);
 
+            const CLIENT_CONFIG = {
+                session: sessionData,
+                puppeteer: {
+                    args: [
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--use-gl=egl',
+                    ],
+                    ignoreDefaultArgs: ['--disable-extensions'],
+                },
+            };
+
             try {
-                client = new Client({
-                    session: sessionData,
-                });
+                client = new Client(CLIENT_CONFIG);
 
                 client.on('authenticated', (session) => {
                     console.log('authenticated');
@@ -98,7 +108,7 @@ module.exports = function ({ whatsappWeb, qrcode, showCliProgress = true }) {
                         console.error(err);
                     }
 
-                    console.log('**************Delete QR**************');
+                    console.log('**************QR DELETED**************');
                     progress.stop();
                     io.emit('success', { url: '/messages', timer: 3000 });
 
@@ -114,18 +124,4 @@ module.exports = function ({ whatsappWeb, qrcode, showCliProgress = true }) {
             }
         });
     }
-
-    // function triggerQR_GUI({ config, Qrcode, qrBit }) {
-    //     return new Promise((resolve, reject) => {
-    //         Qrcode.toDataURL(qrBit, config, function (err, url) {
-    //             if (err) throw err;
-
-    //             // console.log(url);
-    //             return resolve(url);
-
-    //             // var img = document.getElementById('image')
-    //             // img.src = url
-    //         });
-    //     });
-    // }
 };

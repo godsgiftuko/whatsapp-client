@@ -14,13 +14,9 @@ module.exports = function () {
         showCliProgress: false,
     })
         .then((instance) => {
-            // console.log(instance);
-            console.log('Client started == isAuthenicated');
             chats(instance);
         })
         .catch((err) => {
-            // throw new AuthError(err);
-            // console.log(err);
-            console.log('Internal error', err);
+            console.log('Internal error', err.name);
         });
 };

@@ -1,31 +1,27 @@
-const Chats_Model = require('../database/chats.schema');
 const moment = require('moment');
+const { storage } = require('../utils/storage.handler');
 
 module.exports = function (instance) {
     const { io } = require('../../app');
 
-    try {
-        instance.on('message', async (msg) => {
+    instance.on('message', async (msg) => {
+        try {
             const chat = await msg.getChat();
             const { unreadCount, timestamp, name, isGroup } = chat;
-
-            console.log(msg);
+            const contact = await msg.getContact();
 
             const metaData = {
                 unreadCount,
-                timestamp,
-                message: msg.body,
+                user: name,
+                identifier: contact.number,
+                timestamp: moment().format('lll'),
+                messages: msg.body,
             };
 
             if (msg.isStatus || isGroup) return;
 
-            // if (isGroup) {
-
-            // }
-
             const response = `Hi Mr. ${name}! How are you today?`;
-            const contact = await msg.getContact();
-            chat.sendMessage(response);
+            chat.sendMessage(metaData.identifier, response);
 
             io.emit('message', {
                 status: 'success',
@@ -35,24 +31,16 @@ module.exports = function (instance) {
                 contactId: contact.number,
             };
 
-            const isExist = await Chats_Model.exists(query);
+            const isSaved = await storage.set({ metaData });
+            const getAll = await storage.get();
 
-            console.log('Does contact exits? ' + isExist);
-            const newChat = new Chats_Model();
+            console.log(getAll);
 
-            newChat.contactId = contact.number;
-            newChat.contactName = name;
-            newChat.messages = msg.body;
-            newChat.timestamp = moment().format('lll');
-            newChat.unreadCount = unreadCount;
-
-            await newChat.save((err) => {
-                if (err) throw err;
-
+            if (isSaved) {
                 console.log('Chat saved');
-            });
-        });
-    } catch (err) {
-        console.log('error');
-    }
+            }
+        } catch (error) {
+            console.log('An error occured in the chats.js module', error.name);
+        }
+    });
 };

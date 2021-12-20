@@ -1,5 +1,9 @@
 {
     "name": "whatsappbot",
+    "engines": {
+        "node": "14.17.0",
+        "npm": "6.14.13"
+    },
     "version": "1.0.0",
     "description": "",
     "main": "app.js",
@@ -20,6 +24,7 @@
         "moment": "^2.29.1",
         "mongoose": "^6.1.2",
         "morgan": "^1.10.0",
+        "mysql": "^2.18.1",
         "qrcode": "^1.5.0",
         "qrcode-terminal": "^0.12.0",
         "query-string": "^7.0.1",
