@@ -11,5 +11,5 @@
 # Run => npm start
 
                             ************
-                            THANK YOU
+                            GOOD LUCK );
                             ************
