@@ -1,51 +1,220 @@
+
+    <nav class="navbar navbar-expand-lg" style="background-color: #006ebd;">
+        <div class="container-fluid">
+            
+            <a href="#" class="navbar-brand" style=" color: white;"> 
+                <!-- <img src="images/logo.svg" height="28" alt="CoolBrand"> -->
+            <i class="fa fa-whatsapp fa-lg"></i>
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav">
+                    <a href="./data" class="nav-item nav-link active" data-toggle="tooltip" data-placement="bottom" title="View all data">
+                        <i class="fa fa-database"></i>
+                    </a>
+                    <!-- <a href="#" class="nav-item nav-link">Profile</a>
+                    <a href="#" class="nav-item nav-link">Messages</a>
+                    <a href="#" class="nav-item nav-link disabled" tabindex="-1">Reports</a> -->
+                </div>
+                <div class="navbar-nav ms-auto">
+                    <a href="./logout" class="nav-item nav-link" data-toggle="tooltip" data-placement="bottom" title="Sign out">
+                        <i class="fa fa-sign-out"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 <div class="container-fluid">
     <div class="message-wrapper">
         <table id="table_id" class="display">
             <thead>
                 <tr>
-                    <th>Identifier</th>
-                    <th>User</th>
+                    <th>Id</th>
+                    <th>Number</th>
+                    <th>Name</th>
                     <th>Message</th>
                     <th>Time</th>
+                    <th></th>
                 </tr>
             </thead>
         </table>
     </div>
+    <span class="emoji"></span>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer d-flex  justify-content-between">
+        
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
     $(document).ready(function () {
         const socketIo = io();
 
-        $.ajax({
-            url: '/chats',
-            method: 'GET',
-            success(data) {
-                console.log(data)
-                $('#table_id').DataTable({
-                    paging: true,
-                    sort: true,
-                    searching: true,
-                    data: data,
-                    columns: [
-                        { 'data': 'contactId' },
-                        { 'data': 'contactName' },
-                        { 'data': 'messages' },
-                        { 'data': 'timestamp' },
-                    ]
-                })
-
+        let dataLake;
+        const textEllipsis = function (str, maxLength, { side = "end", ellipsis = "..." } = {}) {
+            if (str.length > maxLength) {
+                switch (side) {
+                case "start":
+                    return ellipsis + str.slice(-(maxLength - ellipsis.length));
+                case "end":
+                default:
+                    return str.slice(0, maxLength - ellipsis.length) + ellipsis;
+                }
             }
+            return str;
+        }
 
+        const getData = function (data, type, full, meta) {
+            var result;
+            switch (full.type) {
+                case 'sticker':
+                    result = `<img height=50 src=${`data:${full.codec};base64,`+ data} />`
+                    break;
+                case 'image':
+                    result = `<img height=50 src=${`data:${full.codec};base64,`+ data} />`
+                    break;  
+                case 'video':
+                    result = `<video height=50 width=100% poster="">
+                        <source type="video/webm" src="data:video/webm;base64, ${data}">
+                        <source type="${full.codec}" src="data:${full.codec};base64,${data}">
+                        <span>Video</span
+                    </video>`
+                    break;
+                case 'ptt':
+                    result = `<audio controls>
+                        <source src="data:${full.codec};base64,${data}" type="${full.codec}">
+                        <source src="data:audio/mpeg;base64,${data}" type="audio/mpeg">
+                    </audio>`
+                    break;
+                case 'audio':
+                    result = `<audio controls>
+                        <source src="data:${full.codec};base64,${data}" type="${full.codec}">
+                        <source src="data:audio/mpeg;base64,${data}" type="audio/mpeg">
+                    </audio>`
+                    break;
+                case 'chat':
+                    result = data
+                    // result = textEllipsis(data, 10);
+                    break;
+                default:
+                    result = data
+                    break;
+            }
+            return result;
+        }
+        
 
+        const fetchData = () => {
+            $.ajax({
+                url: '/data',
+                method: 'GET',
+                success(data) { 
+                    dataLake = data;
+                    $('#table_id').DataTable().destroy()
 
-        })
+                    $('#table_id').DataTable({
+                        paging: true,
+                        sort: false,
+                        order: [],
+                        responsive: true,
+                        autoWidth: true,
+                        searching: true,
+                        data: data,
+                        columns: [
+                            { 'data': 'msgId',
+                            },
+                            { 'data': 'identifier' },
+                            { 'data': 'user' },
+                            { 'data': 'messages', className: "editor-message", render: getData },
+                            { 'data': 'timestamp' },
+                            {
+                                data: null,
+                                className: "dt-center editor-delete text-danger",
+                                defaultContent: '<i class="fa fa-trash"/>',
+                                orderable: false
+                            }
+                        ]
+                    })
 
-        socketIo.on("message", (socket) => {
-            console.log(socket)
+                }
+            })
+        }
+
+        fetchData()
+
+        $('#table_id').on('click', 'td.editor-delete', function (e) {
+            e.preventDefault();
+            const Qmsg = $(this).siblings()[0].textContent;
+            const findMsgId = (data) => data.msgId == Qmsg
+            const chat = dataLake.find(findMsgId)
+
+            chat 
+            ?  window.confirm('Are you sure you want to delete this message?') && $.ajax({
+                    url: '/delete/'+chat.msgId,
+                    method: 'DELETE',
+                    contentType: "application/json",
+                    success(response) {
+                        fetchData()
+                        $(".noty").text(response);
+                        $(".modal").css('display', 'flex').fadeOut(2000)
+                    } 
+                })
+            : alert("No message found!")
         });
 
+        $('#table_id').on('click', 'td', function (e) {
+            e.preventDefault();
+            const isTr = $(this).parent();
+            
+            if (isTr.children().last().html() == $(this).html()) return
+            
+            $("#exampleModal").modal()
+            const name = isTr.children()[2].textContent;
+            const timestamp = isTr.children()[4].textContent;
+            let message = isTr.children()[3].innerHTML;
 
+            message = message.includes('<img height') ? message.replace('height="50"', 'height="300"'): message;
+            message = message.includes('<video height') ? message.replace('height="50"', 'height="350" autoplay controls'): message;
+            
+            $(".modal-content .modal-body").html(
+                `<b>from:</b> ${name} <br/><br/>
+                ${message}   `
+            )
+
+            $("#exampleModal").on("hide.bs.modal", function () {
+                $('video').trigger('pause');
+                $('audio').trigger('pause');
+            })
+
+            $(".modal-footer").html(`${timestamp}<button type="button" class="btn btn-secondary" data-dismiss="modal" style="order: 2">Close</button>`)
+        });
+
+        $('[data-toggle="tooltip"]').tooltip()
+
+        socketIo.on("message", ({ msg, timer}) => {
+            fetchData();
+            $(".noty").text(msg);
+            $(".modal").css('display', 'flex').fadeOut(timer);
+        });
 
     })
 </script>

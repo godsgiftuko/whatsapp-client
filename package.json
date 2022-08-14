@@ -5,34 +5,33 @@
         "npm": "6.14.13"
     },
     "version": "1.0.0",
-    "description": "",
-    "main": "app.js",
+    "description": "This a whatsapp message client application.",
+    "main": "index.js",
     "scripts": {
-        "dev": "nodemon --trace-warnings app",
-        "start": "node watcher"
+        "dev": "nodemon --trace-warnings index",
+        "start": "node --trace-warnings index"
     },
     "keywords": [],
-    "author": "",
+    "author": "thegodsgift",
     "license": "ISC",
     "dependencies": {
+        "async": "^3.2.2",
         "body-parser": "^1.19.1",
         "cli-progress": "^3.9.1",
         "dotenv": "^10.0.0",
+        "emojize": "^0.2.0",
         "express": "^4.17.1",
         "express-handlebars": "^6.0.2",
         "hound": "^1.0.5",
         "moment": "^2.29.1",
         "mongoose": "^6.1.2",
-        "morgan": "^1.10.0",
         "mysql": "^2.18.1",
+        "punycode": "^2.1.1",
         "qrcode": "^1.5.0",
         "qrcode-terminal": "^0.12.0",
-        "query-string": "^7.0.1",
-        "sharp": "^0.29.3",
         "socket.io": "^4.4.0",
-        "websocket": "^1.0.34",
-        "whatsapp-web.js": "^1.15.3",
-        "ws": "^8.3.0"
+        "uuid": "^8.3.2",
+        "whatsapp-web.js": "^1.15.3"
     },
     "devDependencies": {
         "nodemon": "^2.0.15"

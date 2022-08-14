@@ -1,21 +1,18 @@
 const express = require('express');
 const exHBS = require('express-handlebars');
-const { config } = require('dotenv');
 const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 const routers = require('./src/routers/pages')(express);
-const { connectMysql } = require('./src/database/mysql/mysql');
-const whatsAPP = require('./src/whatsApp-api/app')();
-
 const http = require('http');
 const server = http.createServer(app);
 const { Server, Socket } = require('socket.io');
 const io = new Server(server);
 
 // APP CONFIG
-config();
 app.set('PORT', process.env.PORT || 3000);
+const env = process.env.DATABASE_HOST == 'localhost' ? 'http://localhost:' + app.get('PORT') + '/' : process.env.DATABASE_HOST;
+app.set('ENV', env);
 app.engine(
     'hbs',
     exHBS.engine({
@@ -35,27 +32,7 @@ app.use('/', routers);
 
 //socket
 io.on('connection', (socket) => {
-    console.log('ws: Connected');
+    console.log('Socket connected!');
 });
 
-(async () => {
-    const dataBase = await connectMysql();
-
-    // console.log(dataBase);
-
-    if (dataBase) {
-        return io.emit('status', {
-            status: {
-                db: dataBase ? true : false,
-            },
-        });
-    }
-    io.emit('disconnected', { msg: 'disconnected' });
-})();
-
-server.listen(app.get('PORT'), () =>
-    console.log(`Server running on port ${app.get('PORT')}`)
-);
-
-exports.io = io;
-exports.app = app;
+exports.self = { server: server, app: app, io };

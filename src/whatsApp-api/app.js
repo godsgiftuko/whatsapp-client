@@ -6,17 +6,22 @@ const { AuthError } = require('../helpers/error');
 const chats = require('./chats');
 
 module.exports = function () {
-    const isAuthenicated = auth({
-        whatsappWeb,
-        qrcode: {
-            Qrcode,
-        },
-        showCliProgress: false,
-    })
-        .then((instance) => {
+    return new Promise((resolve, reject) => {
+        const isAuthenicated = auth({
+            whatsappWeb,
+            qrcode: {
+                Qrcode,
+            },
+            showCliProgress: false,
+        })
+        .then(async (client) => {
+            const instance = 'hadSession' in client ? await client.generatedQR : client;
             chats(instance);
+            return resolve(true && instance)
         })
         .catch((err) => {
-            console.log('Internal error', err.name);
+            return reject(err)
+            // console.log('Internal error', err);
         });
+    })
 };
