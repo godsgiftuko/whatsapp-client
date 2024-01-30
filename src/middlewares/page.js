@@ -39,10 +39,10 @@ const messages = async (req, res) => {
   
   try {
     const [isAuthenicated] = await storage.get({ table: 'sessions', order: false })
-    if (!isAuthenicated) {
-      res.redirect("/");
-      return
-    }
+    // if (!isAuthenicated) {
+    //   res.redirect("/");
+    //   return
+    // }
     res.render("messages");
     
   } catch (error) {
@@ -55,7 +55,8 @@ const getMessages = async (req, res) => {
   const [isAuthenicated] = await storage.get({ table: 'sessions', order: false })
 
   const getChats = await storage.get({ table:  'chats', delimiter: 'timestamp' });
-  isAuthenicated ? res.json(getChats) : res.redirect("/");
+  res.json(getChats)
+  // isAuthenicated ? res.json(getChats) : res.redirect("/");
 };
 
 const qrCode = async function (req, res) {

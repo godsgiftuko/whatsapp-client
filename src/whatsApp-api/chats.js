@@ -57,8 +57,8 @@ module.exports = function (instance) {
             });
 
 
-            const isSaved = await storage.set({ metaData, table: 'chats' });
-            const getAll = await storage.get();
+            // const isSaved = await storage.set({ metaData, table: 'chats' });
+            // const getAll = await storage.get();
 
         } catch (error) {
             console.log('An error occured in the chats.js module', error);

@@ -10,7 +10,8 @@ const { Server, Socket } = require('socket.io');
 const io = new Server(server);
 
 // APP CONFIG
-app.set('PORT', process.env.PORT || 3000);
+const PORT = process.env.PORT || 3333;
+app.set('PORT', PORT);
 const env = process.env.DATABASE_HOST == 'localhost' ? 'http://localhost:' + app.get('PORT') + '/' : process.env.DATABASE_HOST;
 app.set('ENV', env);
 app.engine(

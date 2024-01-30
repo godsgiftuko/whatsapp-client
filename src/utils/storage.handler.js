@@ -56,7 +56,9 @@ exports.Storage = function() {
          */
         get: ({ table, col, order = true, delimiter, sort = 'DESC' }) => {
             return new Promise(async (resolve, reject) => {
+                console.log('getting from DB');
                 const dataBase = await connectMysql;    
+                console.log({dataBase});
                 const orderList = `ORDER BY ${delimiter} ${sort}`;
 
                 const query = col && delimiter && order
